@@ -4,6 +4,9 @@
     <name>tiki_flutter_json2dart</name>
     <vendor>binhle6</vendor>
 
+    <depends>Dart</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.json</depends>
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -15,4 +18,13 @@
         <listener class="com.github.binhle6.tikiflutterjson2dart.listeners.MyProjectManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="Json2DartAction" class="com.github.binhle6.tikiflutterjson2dart.action.Json2DartAction" text="Json2Dart"
+                icon="/icons/json2dart.png"
+                description="Generate dart file from JSON">
+            <add-to-group anchor="before" relative-to-action="NewFile" group-id="NewGroup"/>
+        </action>
+    </actions>
 </idea-plugin>
