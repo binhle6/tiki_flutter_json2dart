@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.binhle6.tikiflutterjson2dart</id>
-    <name>tiki_flutter_json2dart</name>
+    <name>Tiki Flutter Json2dart</name>
     <vendor>binhle6</vendor>
 
     <depends>Dart</depends>
@@ -21,9 +21,9 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="Json2DartAction" class="com.github.binhle6.tikiflutterjson2dart.action.Json2DartAction" text="Json2Dart"
+        <action id="TikiJson2DartAction" class="com.github.binhle6.tikiflutterjson2dart.action.Json2DartAction" text="Convert Json to Dart (Tiki)"
                 icon="/icons/json2dart.png"
-                description="Generate dart file from JSON">
+                description="Generate dart object files from JSON model">
             <add-to-group anchor="before" relative-to-action="NewFile" group-id="NewGroup"/>
         </action>
     </actions>
