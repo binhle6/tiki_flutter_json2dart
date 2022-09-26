@@ -1,6 +1,6 @@
-package org.jetbrains.plugins.template.services
+package com.github.binhle6.tikiflutterjson2dart.services
 
-import org.jetbrains.plugins.template.MyBundle
+import com.github.binhle6.tikiflutterjson2dart.MyBundle
 
 class MyApplicationService {
 
