@@ -3,6 +3,18 @@
     <id>com.github.binhle6.tikiflutterjson2dart</id>
     <name>Tiki Flutter Json2dart</name>
     <vendor>binhle6</vendor>
+    <description><![CDATA[
+    <h2>A plugin for implementing Clean Architecture in flutter</h2>
+    <h3>Convert json model to .dart files with support for json_serializable and null safety</h3>
+    <h3>Generate Clean Architecture folder structure</h3>
+    <ol>
+    <li>Add <a href="https://docs.flutter.dev/development/data-and-backend/json#setting-up-json_serializable-in-a-project">dependencies</a> if needed </li>
+    <li>Right click on the desired directory</li>
+    <li>Fill in the input, adjust setting and press <b>Generate</b></li>
+    <li>Using built-in commands</li><br>
+    <p><code> flutter packages pub run build_runner build --delete-conflicting-outputs</code></p>
+    </ol>
+    ]]></description>
 
     <depends>Dart</depends>
     <depends>com.intellij.modules.lang</depends>
@@ -24,7 +36,7 @@
         <!-- Add your actions here -->
         <action id="TikiJson2DartAction"
                 class="com.github.binhle6.tikiflutterjson2dart.action.Json2DartAction"
-                text="Convert Json to Dart (Tiki)"
+                text="Dart File From JSON"
                 icon="/icons/json2dart.png"
                 description="Generate dart object files from JSON model">
             <add-to-group anchor="before" relative-to-action="NewFile" group-id="NewGroup"/>

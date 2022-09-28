@@ -47,7 +47,7 @@ class Json2DartAction : AnAction() {
             val classOptions = it.classOptions
             StorageRepo.saveOptions(options = classOptions)
 
-            val suffix = it.inputSuffix.trim().split(".")[0]
+            val suffix = it.inputSuffix.trim().split(".")[0].toUpperCaseFirstOne()
 
             val dartClassDefinition = map2CustomClassDefinition(fileName, map, classOptions, suffix)
 

@@ -9,15 +9,13 @@ class StorageRepo {
         fun getOptions(): ClassOptions {
             return ClassOptions(
                 annotationOption = AnnotationOption.valueOf(
-                    getString(
-                        "annotation", AnnotationOption.JsonSerializer.toString()
-                    )
+                    getString("annotation", AnnotationOption.JsonSerializer.toString())
                 ),
-                isExplicitToJson = getBoolean("isExplicitToJson"),
-                isIgnoreUnannotated = getBoolean("isIgnoreUnannotated"),
-                isFinal = getBoolean("isFinal"),
-                isNullable = getBoolean("isNullable"),
-                isNullSafety = getBoolean("isNullSafety"),
+                isExplicitToJson = getBoolean("isExplicitToJson", true),
+                isIgnoreUnannotated = getBoolean("isIgnoreUnannotated", false),
+                isFinal = getBoolean("isFinal", false),
+                isNullable = getBoolean("isNullable", true),
+                isNullSafety = getBoolean("isNullSafety", true),
             )
         }
 
@@ -30,8 +28,8 @@ class StorageRepo {
             setBoolean("nullSafety", options.isNullSafety)
         }
 
-        private fun getBoolean(name: String): Boolean {
-            return PropertiesComponent.getInstance().getBoolean(name, false)
+        private fun getBoolean(name: String, defaultValue: Boolean): Boolean {
+            return PropertiesComponent.getInstance().getBoolean(name, defaultValue)
         }
 
         private fun setBoolean(name: String, value: Boolean) {

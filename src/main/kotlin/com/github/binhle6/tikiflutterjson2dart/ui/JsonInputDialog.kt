@@ -48,7 +48,7 @@ open class JsonInputDialog(
     val doOKAction: (info: CollectInfo) -> Unit
 ) : Messages.InputDialog(
     project,
-    "Please input the class name and JSON String for generating dart class",
+    "The Object name and JSON text field are required",
     "Generate Dart Class",
     Messages.getInformationIcon(),
     "",
@@ -59,7 +59,7 @@ open class JsonInputDialog(
     private lateinit var suffixInput: JTextField
     private lateinit var advancedButton: JButton
     private val prettyGson: Gson = GsonBuilder().setPrettyPrinting().serializeNulls().create()
-    var classOption: ClassOptions = StorageRepo.getOptions()
+    private var classOption: ClassOptions = StorageRepo.getOptions()
 
     init {
         setOKButtonText("Generate")
@@ -74,7 +74,7 @@ open class JsonInputDialog(
 
         val classNameInputContainer = createLinearLayoutVertical()
         classNameInputContainer.preferredSize = JBDimension(500, 56)
-        val classNameTitle = JBLabel("Class name:")
+        val classNameTitle = JBLabel("Object name:")
         classNameTitle.border = JBEmptyBorder(5, 0, 5, 0)
         classNameInputContainer.addComponentIntoVerticalBoxAlignmentLeft(classNameTitle)
         classNameInput = JTextField()
@@ -123,7 +123,7 @@ open class JsonInputDialog(
             }
         })
 
-        advancedButton = JButton("Advanced")
+        advancedButton = JButton("Options")
         advancedButton.horizontalAlignment = SwingConstants.CENTER;
         advancedButton.addActionListener {
             print("$project")
@@ -177,9 +177,9 @@ open class JsonInputDialog(
                 val formatJSON = prettyGson.toJson(jsonElement)
                 myField.text = formatJSON
             } catch (e: Exception) {
+                print(e.message)
             }
         }
-
     }
 
     override fun doOKAction() {

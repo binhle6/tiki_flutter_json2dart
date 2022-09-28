@@ -38,6 +38,7 @@ open class AdvancedOptionsDialog(
     init {
         init()
         setOKButtonText("OK")
+        setSize(400,300)
         title = "Advanced Options";
     }
 
@@ -75,8 +76,8 @@ open class AdvancedOptionsDialog(
         annotationPanel.add(jsonSerializerRadioButton)
         annotationPanel.add(jSerializerRadioButton)
 
-        explicitToJsonCheckBox = createCheckbox("Explicit to json")
-        ignoreUnannotatedCheckBox = createCheckbox("Ignore unannotated properties")
+        explicitToJsonCheckBox = createCheckbox("explicitToJson")
+        ignoreUnannotatedCheckBox = createCheckbox("ignoreUnannotated")
         val annoParamPanel = createPanel()
         annoParamPanel.add(explicitToJsonCheckBox)
         annoParamPanel.add(ignoreUnannotatedCheckBox)
@@ -93,7 +94,7 @@ open class AdvancedOptionsDialog(
 //        generatePanel.add(withCopyCheckBox)
 //        generatePanel.add(withEqualityCheckBox)
 
-        nullSafetyCheckBox = createCheckbox("Support null safety")
+        nullSafetyCheckBox = createCheckbox("Support null safety (recommended)")
 
         tabs.border = JBEmptyBorder(16, 16, 5, 16)
         tabs.addTab("Annotation", annotationPanel)
