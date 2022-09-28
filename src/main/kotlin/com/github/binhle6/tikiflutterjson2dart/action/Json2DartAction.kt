@@ -37,27 +37,26 @@ class Json2DartAction : AnAction() {
         } ?: return
 
         JsonInputDialog(project) {
-            //Remove the file suffix
-            var fileName = it.inputClassName.split(".")[0]
+            // Remove the file suffix
+            var fileName = it.inputClassName.trim().split(".")[0]
             fileName = fileName.pascalCaseToSnakeCase().toLowerCaseFirstOne()
             if (containsFile(directory, fileName)) {
                 Messages.showInfoMessage(project, "The $fileName.dart already exists", "Info")
                 return@JsonInputDialog
             }
+
             val map = parseInputJson(it.inputJson)
+
             val classOptions = it.classOptions
-
-
             StorageRepo.saveOptions(options = classOptions)
-            // TODO: get affix and pass to function
-            val dartClassDefinition = map2CustomClassDefinition(fileName, map, classOptions, "Response")
+
+            val suffix = it.inputSuffix.trim().split(".")[0]
+
+            val dartClassDefinition = map2CustomClassDefinition(fileName, map, classOptions, suffix)
 
             val generator = DartFileGenerator(project, directory, fileName)
-            val classGenerator =
-                if (classOptions.annotationOption == AnnotationOption.JsonSerializer) JsonSerializerGenerator(
-                    classOptions,
-                    fileName
-                ) else JSerializerGenerator(classOptions, fileName)
+            val classGenerator = if (classOptions.annotationOption == AnnotationOption.JsonSerializer)
+                JsonSerializerGenerator(classOptions, fileName) else JSerializerGenerator(classOptions, fileName)
             val codeContent = classGenerator.generateCode(dartClassDefinition)
             generator.generateDarFile(codeContent)
 

@@ -11,14 +11,14 @@ fun map2CustomClassDefinition(
     fileName: String,
     map: Map<String, Any>,
     classOptions: ClassOptions,
-    affix: String = "",
+    suffix: String = "",
 ): CustomClassType {
     val fieldList = mutableListOf<TypeDefinition>()
     map.entries.forEach {
         when (it.value) {
             is Map<*, *> -> {
                 val customClassType =
-                    map2CustomClassDefinition(it.key, it.value as Map<String, Any>, classOptions, affix)
+                    map2CustomClassDefinition(it.key, it.value as Map<String, Any>, classOptions, suffix)
                 fieldList.add(customClassType)
             }
 
@@ -27,7 +27,7 @@ fun map2CustomClassDefinition(
                 listValue.firstOrNull()?.apply {
                     if (this is Map<*, *>) {
                         val customClassType =
-                            map2CustomClassDefinition(it.key, this as Map<String, Any>, classOptions, affix)
+                            map2CustomClassDefinition(it.key, this as Map<String, Any>, classOptions, suffix)
                         customClassType.typeName = customClassType.typeName.removeLastS()
                         fieldList.add(ListClassType(it.key, customClassType))
                     } else {
@@ -45,7 +45,7 @@ fun map2CustomClassDefinition(
         }
     }
     val customClassType = CustomClassType(fileName, fieldList, classOptions)
-    customClassType.typeName = customClassType.typeName + affix
+    customClassType.typeName = customClassType.typeName + suffix
     return customClassType
 }
 
