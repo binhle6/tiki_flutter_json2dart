@@ -23,6 +23,4 @@ class DartFileGenerator(
             }
         }, "JSON to Dart Class", "JSON to Dart Class")
     }
-
-
 }

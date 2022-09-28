@@ -15,4 +15,3 @@ fun Container.addComponentIntoVerticalBoxAlignmentLeft(component: Component) {
     }
 
 }
-
