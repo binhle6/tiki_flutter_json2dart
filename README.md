@@ -15,11 +15,16 @@
 - [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
 
 <!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
-
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
-
-To keep everything working, do not remove `<!-- ... -->` sections. 
+<h3>A plugin for implementing Clean Architecture in Flutter</h2>
+<h4>Convert json model to .dart files with support for json_serializable and null safety</h3>
+<h4>Generate Clean Architecture folder structure</h3>
+<ol>
+<li>Add <a href="https://docs.flutter.dev/development/data-and-backend/json#setting-up-json_serializable-in-a-project">dependencies</a> if needed </li>
+<li>Right click on the desired directory</li>
+<li>Fill in the inputs, adjust setting and press <b>Generate</b></li>
+<li>Using built-in commands</li><br>
+<p><code> flutter packages pub run build_runner build --delete-conflicting-outputs</code></p>
+</ol> 
 <!-- Plugin description end -->
 
 ## Installation
