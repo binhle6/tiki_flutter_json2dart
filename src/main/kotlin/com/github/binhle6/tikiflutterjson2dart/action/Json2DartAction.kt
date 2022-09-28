@@ -49,11 +49,8 @@ class Json2DartAction : AnAction() {
 
 
             StorageRepo.saveOptions(options = classOptions)
-            val dartClassDefinition = map2CustomClassDefinition(
-                fileName,
-                map,
-                classOptions = classOptions
-            )
+            // TODO: get affix and pass to function
+            val dartClassDefinition = map2CustomClassDefinition(fileName, map, classOptions, "Response")
 
             val generator = DartFileGenerator(project, directory, fileName)
             val classGenerator =
