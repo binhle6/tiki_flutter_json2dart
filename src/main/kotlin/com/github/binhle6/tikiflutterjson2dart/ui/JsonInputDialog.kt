@@ -1,5 +1,8 @@
 package com.github.binhle6.tikiflutterjson2dart.ui
 
+import com.github.binhle6.tikiflutterjson2dart.ClassOptions
+import com.github.binhle6.tikiflutterjson2dart.CollectInfo
+import com.github.binhle6.tikiflutterjson2dart.repos.StorageRepo
 import com.google.gson.*
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.InputValidator
@@ -9,12 +12,8 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBEmptyBorder
-import com.github.binhle6.tikiflutterjson2dart.ClassOptions
-import com.github.binhle6.tikiflutterjson2dart.CollectInfo
-import com.github.binhle6.tikiflutterjson2dart.repos.StorageRepo
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.text.JTextComponent
@@ -32,7 +31,6 @@ class MyInputValidator : InputValidator {
         } catch (e: JsonSyntaxException) {
             false
         }
-
     }
 
     override fun canClose(inputString: String): Boolean {
@@ -50,14 +48,15 @@ open class JsonInputDialog(
     val doOKAction: (info: CollectInfo) -> Unit
 ) : Messages.InputDialog(
     project,
-    "Please input the class name and JSON String for generating dart bean class",
-    "Make Dart bean Class Code",
+    "Please input the class name and JSON String for generating dart class",
+    "Generate Dart Class",
     Messages.getInformationIcon(),
     "",
     myInputValidator
 ) {
 
     private lateinit var classNameInput: JTextField
+    private lateinit var suffixInput: JTextField
     private lateinit var advancedButton: JButton
     private val prettyGson: Gson = GsonBuilder().setPrettyPrinting().serializeNulls().create()
     var classOption: ClassOptions = StorageRepo.getOptions()
@@ -72,32 +71,39 @@ open class JsonInputDialog(
             val textComponent = createTextComponent()
             messagePanel.add(textComponent, BorderLayout.NORTH)
         }
-        myField = createTextFieldComponent()
 
         val classNameInputContainer = createLinearLayoutVertical()
-        val classNameTitle = JBLabel("Class Name: ")
+        classNameInputContainer.preferredSize = JBDimension(500, 56)
+        val classNameTitle = JBLabel("Class name:")
         classNameTitle.border = JBEmptyBorder(5, 0, 5, 0)
         classNameInputContainer.addComponentIntoVerticalBoxAlignmentLeft(classNameTitle)
         classNameInput = JTextField()
         classNameInput.preferredSize = JBDimension(400, 40)
-        advancedButton = JButton("Advanced")
         myInputValidator.classNameField = classNameInput
         classNameInput.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
                 okAction.isEnabled = myInputValidator.checkInput(myField.text)
             }
         })
-
         classNameInputContainer.addComponentIntoVerticalBoxAlignmentLeft(classNameInput)
-        classNameInputContainer.preferredSize = JBDimension(500, 56)
 
-        val createScrollableTextComponent = createMyScrollableTextComponent()
+        val suffixInputContainer = createLinearLayoutVertical()
+        suffixInputContainer.preferredSize = JBDimension(500, 56)
+        val affixTitle = JBLabel("Suffix:")
+        affixTitle.border = JBEmptyBorder(5, 0, 5, 0)
+        suffixInputContainer.addComponentIntoVerticalBoxAlignmentLeft(affixTitle)
+        suffixInput = JTextField()
+        suffixInput.preferredSize = JBDimension(400, 40)
+        suffixInputContainer.addComponentIntoVerticalBoxAlignmentLeft(suffixInput)
+
         val jsonInputContainer = createLinearLayoutVertical()
-        jsonInputContainer.preferredSize = JBDimension(700, 400)
         jsonInputContainer.border = JBEmptyBorder(5, 0, 5, 5)
-        val jsonTitle = JBLabel("JSON Text:")
+        jsonInputContainer.preferredSize = JBDimension(700, 400)
+        val jsonTitle = JBLabel("JSON text:")
         jsonTitle.border = JBEmptyBorder(5, 0, 5, 0)
         jsonInputContainer.addComponentIntoVerticalBoxAlignmentLeft(jsonTitle)
+        myField = createTextFieldComponent()
+        val createScrollableTextComponent = createMyScrollableTextComponent(myField)
         jsonInputContainer.addComponentIntoVerticalBoxAlignmentLeft(createScrollableTextComponent)
 
 
@@ -105,8 +111,10 @@ open class JsonInputDialog(
         val centerBoxLayout = BoxLayout(centerContainer, BoxLayout.PAGE_AXIS)
         centerContainer.layout = centerBoxLayout
         centerContainer.addComponentIntoVerticalBoxAlignmentLeft(classNameInputContainer)
+        centerContainer.addComponentIntoVerticalBoxAlignmentLeft(suffixInputContainer)
         centerContainer.addComponentIntoVerticalBoxAlignmentLeft(jsonInputContainer)
         messagePanel.add(centerContainer, BorderLayout.CENTER)
+
         val formatButton = JButton("Format")
         formatButton.horizontalAlignment = SwingConstants.CENTER
         formatButton.addActionListener(object : AbstractAction() {
@@ -115,28 +123,24 @@ open class JsonInputDialog(
             }
         })
 
+        advancedButton = JButton("Advanced")
         advancedButton.horizontalAlignment = SwingConstants.CENTER;
-        advancedButton.addActionListener(ActionListener {
+        advancedButton.addActionListener {
             print("$project")
             val dialog = AdvancedOptionsDialog(project, this.classOption, true) {
                 classOption = it
                 StorageRepo.saveOptions(it);
             }
             dialog.show()
-        })
+        }
 
         val settingContainer = JPanel()
         settingContainer.border = JBEmptyBorder(0, 0, 5, 5)
-        val boxLayout = BoxLayout(settingContainer, BoxLayout.LINE_AXIS)
-        settingContainer.layout = boxLayout
+        settingContainer.layout = BoxLayout(settingContainer, BoxLayout.LINE_AXIS)
         settingContainer.add(advancedButton)
-
         settingContainer.add(Box.createHorizontalGlue())
-
         settingContainer.add(Box.createHorizontalStrut(16))
-
         settingContainer.add(formatButton)
-
         messagePanel.add(settingContainer, BorderLayout.SOUTH)
 
         return messagePanel
@@ -148,16 +152,14 @@ open class JsonInputDialog(
         return jTextArea
     }
 
-
-    private fun createMyScrollableTextComponent(): JComponent {
-        val jbScrollPane = JBScrollPane(myField)
+    private fun createMyScrollableTextComponent(textField: JTextComponent): JComponent {
+        val jbScrollPane = JBScrollPane(textField)
         jbScrollPane.preferredSize = JBDimension(700, 350)
         jbScrollPane.autoscrolls = true
         jbScrollPane.horizontalScrollBarPolicy = JBScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
         jbScrollPane.verticalScrollBarPolicy = JBScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
         return jbScrollPane
     }
-
 
     override fun getPreferredFocusedComponent(): JComponent? {
         return if (classNameInput.text?.isEmpty() == false) {
@@ -182,8 +184,10 @@ open class JsonInputDialog(
 
     override fun doOKAction() {
         val collectInfo = CollectInfo(
-            classNameInput.text, myField.text,
-            classOption
+            classNameInput.text,
+            suffixInput.text,
+            myField.text,
+            classOption,
         )
 
         if (collectInfo.inputClassName.isEmpty()) {
