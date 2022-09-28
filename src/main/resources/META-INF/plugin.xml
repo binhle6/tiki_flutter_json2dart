@@ -10,18 +10,21 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.binhle6.tikiflutterjson2dart.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.binhle6.tikiflutterjson2dart.services.MyProjectService"/>
+        <!--        <applicationService-->
+        <!--                serviceImplementation="com.github.binhle6.tikiflutterjson2dart.services.MyApplicationService"/>-->
+        <!--        <projectService serviceImplementation="com.github.binhle6.tikiflutterjson2dart.services.MyProjectService"/>-->
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.binhle6.tikiflutterjson2dart.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+        <!--        <listener class="com.github.binhle6.tikiflutterjson2dart.listeners.MyProjectManagerListener"-->
+        <!--                  topic="com.intellij.openapi.project.ProjectManagerListener"/>-->
     </applicationListeners>
 
     <actions>
         <!-- Add your actions here -->
-        <action id="TikiJson2DartAction" class="com.github.binhle6.tikiflutterjson2dart.action.Json2DartAction" text="Convert Json to Dart (Tiki)"
+        <action id="TikiJson2DartAction"
+                class="com.github.binhle6.tikiflutterjson2dart.action.Json2DartAction"
+                text="Convert Json to Dart (Tiki)"
                 icon="/icons/json2dart.png"
                 description="Generate dart object files from JSON model">
             <add-to-group anchor="before" relative-to-action="NewFile" group-id="NewGroup"/>
