@@ -19,15 +19,21 @@ open class AdvancedOptionsDialog(
     val doOKAction: (classOptions: ClassOptions) -> Unit
 ) : DialogWrapper(project, canBeParent) {
 
-    private lateinit var finalCheckBox: JCheckBox
-    private lateinit var nullableCheckBox: JCheckBox
-    private lateinit var ignoreUnannotatedCheckBox: JCheckBox
-    private lateinit var withCopyCheckBox: JCheckBox
-    private lateinit var withEqualityCheckBox: JCheckBox
-    private lateinit var nullSafetyCheckBox: JCheckBox
+    private lateinit var noneRadioButton: JRadioButton
     private lateinit var jSerializerRadioButton: JRadioButton
     private lateinit var jsonSerializerRadioButton: JRadioButton
     private lateinit var radioGroup: ButtonGroup
+
+    private lateinit var explicitToJsonCheckBox: JCheckBox
+    private lateinit var ignoreUnannotatedCheckBox: JCheckBox
+
+    private lateinit var finalCheckBox: JCheckBox
+    private lateinit var nullableCheckBox: JCheckBox
+
+//    private lateinit var withCopyCheckBox: JCheckBox
+//    private lateinit var withEqualityCheckBox: JCheckBox
+
+    private lateinit var nullSafetyCheckBox: JCheckBox
 
     init {
         init()
@@ -36,59 +42,67 @@ open class AdvancedOptionsDialog(
     }
 
     private fun setViewValues() {
-        finalCheckBox.isSelected = classOptions.isFinal
-        nullableCheckBox.isSelected = classOptions.jsNullable
-        ignoreUnannotatedCheckBox.isSelected = classOptions.jsIgnoreUnannotated
-        withEqualityCheckBox.isSelected = classOptions.withEquality
-        withCopyCheckBox.isSelected = classOptions.withCopy
-        nullSafetyCheckBox.isSelected = classOptions.nullSafety
+        noneRadioButton.isSelected = classOptions.annotationOption == AnnotationOption.None
         jsonSerializerRadioButton.isSelected = classOptions.annotationOption == AnnotationOption.JsonSerializer
         jSerializerRadioButton.isSelected = classOptions.annotationOption == AnnotationOption.JSerializer
+
+        explicitToJsonCheckBox.isSelected = classOptions.isExplicitToJson
+        ignoreUnannotatedCheckBox.isSelected = classOptions.isIgnoreUnannotated
+
+        finalCheckBox.isSelected = classOptions.isFinal
+        nullableCheckBox.isSelected = classOptions.isNullable
+
+//        withCopyCheckBox.isSelected = classOptions.withCopy
+//        withEqualityCheckBox.isSelected = classOptions.withEquality
+
+        nullSafetyCheckBox.isSelected = classOptions.isNullSafety
     }
 
     override fun createCenterPanel(): JComponent? {
         val messagePanel = JPanel(BorderLayout())
         messagePanel.preferredSize
-        val tabs = TabbedPaneImpl(SwingConstants.TOP);
+        val tabs = TabbedPaneImpl(SwingConstants.TOP)
+
+        noneRadioButton = createRadioButton("None")
+        jSerializerRadioButton = createRadioButton("JSerializer");
+        jsonSerializerRadioButton = createRadioButton("JsonSerializer")
+        radioGroup = ButtonGroup()
+        radioGroup.add(noneRadioButton)
+        radioGroup.add(jsonSerializerRadioButton)
+        radioGroup.add(jSerializerRadioButton)
+        val annotationPanel = createPanel()
+        annotationPanel.add(noneRadioButton)
+        annotationPanel.add(jsonSerializerRadioButton)
+        annotationPanel.add(jSerializerRadioButton)
+
+        explicitToJsonCheckBox = createCheckbox("Explicit to json")
+        ignoreUnannotatedCheckBox = createCheckbox("Ignore unannotated properties")
+        val annoParamPanel = createPanel()
+        annoParamPanel.add(explicitToJsonCheckBox)
+        annoParamPanel.add(ignoreUnannotatedCheckBox)
 
         finalCheckBox = createCheckbox("Final");
-        nullableCheckBox = createCheckbox("Nullable");
-        ignoreUnannotatedCheckBox = createCheckbox("Ignore Unannotated Properties");
-        withCopyCheckBox = createCheckbox("With Copy");
-        withEqualityCheckBox = createCheckbox("With Equality");
-        nullSafetyCheckBox = createCheckbox("Support null safety");
-
-        jSerializerRadioButton = createRadioButton("JSerializer");
-        jsonSerializerRadioButton = createRadioButton("JsonSerializer");
-        radioGroup = ButtonGroup();
-        radioGroup.add(jsonSerializerRadioButton);
-        radioGroup.add(jSerializerRadioButton)
-
-        val propertyPanel = createPanel();
-
+        nullableCheckBox = createCheckbox("Nullable")
+        val propertyPanel = createPanel()
         propertyPanel.add(finalCheckBox)
         propertyPanel.add(nullableCheckBox)
-        propertyPanel.add(ignoreUnannotatedCheckBox)
 
-        val generatePanel = createPanel()
+//        withCopyCheckBox = createCheckbox("With Copy")
+//        withEqualityCheckBox = createCheckbox("With Equality")
+//        val generatePanel = createPanel()
+//        generatePanel.add(withCopyCheckBox)
+//        generatePanel.add(withEqualityCheckBox)
 
-        generatePanel.add(withCopyCheckBox)
-        generatePanel.add(withEqualityCheckBox)
-
-        val optionsPanel = createPanel()
-        optionsPanel.add(nullSafetyCheckBox);
-
-        val annotationPanel = createPanel();
-        annotationPanel.add(jsonSerializerRadioButton);
-        annotationPanel.add(jSerializerRadioButton);
+        nullSafetyCheckBox = createCheckbox("Support null safety")
 
         tabs.border = JBEmptyBorder(16, 16, 5, 16)
+        tabs.addTab("Annotation", annotationPanel)
+        tabs.addTab("Parameter", annoParamPanel)
         tabs.addTab("Property", propertyPanel)
         //tabs.addTab("Generate", generatePanel)
-        tabs.addTab("Options", optionsPanel)
-        tabs.addTab("Annotation", annotationPanel)
 
         messagePanel.add(tabs, BorderLayout.NORTH)
+        messagePanel.add(nullSafetyCheckBox, BorderLayout.SOUTH)
         setViewValues()
         return messagePanel
     }
@@ -120,13 +134,16 @@ open class AdvancedOptionsDialog(
 
         doOKAction(
             ClassOptions(
+                annotationOption = if (noneRadioButton.isSelected) AnnotationOption.None
+                else if (jsonSerializerRadioButton.isSelected) AnnotationOption.JsonSerializer
+                else AnnotationOption.JSerializer,
+                isExplicitToJson = explicitToJsonCheckBox.isSelected,
+                isIgnoreUnannotated = ignoreUnannotatedCheckBox.isSelected,
                 isFinal = finalCheckBox.isSelected,
-                jsNullable = nullableCheckBox.isSelected,
-                jsIgnoreUnannotated = ignoreUnannotatedCheckBox.isSelected,
-                withCopy = withCopyCheckBox.isSelected,
-                withEquality = withEqualityCheckBox.isSelected,
-                nullSafety = nullSafetyCheckBox.isSelected,
-                annotationOption = if (jsonSerializerRadioButton.isSelected) AnnotationOption.JsonSerializer else AnnotationOption.JSerializer,
+                isNullable = nullableCheckBox.isSelected,
+//                withCopy = withCopyCheckBox.isSelected,
+//                withEquality = withEqualityCheckBox.isSelected,
+                isNullSafety = nullSafetyCheckBox.isSelected,
             )
         )
         super.doOKAction()

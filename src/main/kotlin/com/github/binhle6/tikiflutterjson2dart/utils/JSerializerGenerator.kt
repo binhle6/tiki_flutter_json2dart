@@ -23,5 +23,4 @@ class JSerializerGenerator(classOptions: ClassOptions, fileName: String) : DartC
     override fun afterFieldsString(className: String): String {
         return ""
     }
-
 }

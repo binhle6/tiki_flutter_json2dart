@@ -5,14 +5,26 @@ import com.github.binhle6.tikiflutterjson2dart.CustomClassType
 import com.github.binhle6.tikiflutterjson2dart.ListClassType
 import com.github.binhle6.tikiflutterjson2dart.TypeDefinition
 
-abstract class DartClassGenerator(private val classOptions: ClassOptions, private val fileName: String) {
+open class DartClassGenerator(private val classOptions: ClassOptions, private val fileName: String) {
+    open fun importString(): String {
+        return ""
+    }
 
-    protected abstract fun importString(): String
-    protected abstract fun classHead(fileName: String): String
+    open fun classHead(fileName: String): String {
+        return ""
+    }
 
-    protected abstract fun classAnnotation(classOptions: ClassOptions): String
-    protected abstract fun fieldAnnotation(name: String): String
-    protected abstract fun afterFieldsString(className: String): String
+    open fun classAnnotation(classOptions: ClassOptions): String {
+        return ""
+    }
+
+    open fun fieldAnnotation(name: String): String {
+        return ""
+    }
+
+    open fun afterFieldsString(className: String): String {
+        return ""
+    }
 
     fun generateCode(dartClass: CustomClassType): String {
         val sb = StringBuilder()
@@ -44,7 +56,7 @@ abstract class DartClassGenerator(private val classOptions: ClassOptions, privat
             sb.append("\n")
             if (classOptions.isFinal)
                 sb.append("  final")
-            sb.append("  ${it.typeName}${if (classOptions.jsNullable && classOptions.nullSafety) "?" else ""} ${it.name.snakeCaseToPascalCase()};")
+            sb.append("  ${it.typeName}${if (classOptions.isNullable && classOptions.isNullSafety) "?" else ""} ${it.name.snakeCaseToPascalCase()};")
             sb.append("\n")
         }
         return sb.toString()
@@ -60,7 +72,7 @@ abstract class DartClassGenerator(private val classOptions: ClassOptions, privat
             constructorStr.append("{")
             dartClass.fieldList.forEach {
 
-                if (dartClass.classOptions.nullSafety && !dartClass.classOptions.jsNullable) {
+                if (dartClass.classOptions.isNullSafety && !dartClass.classOptions.isNullable) {
                     constructorStr.append("required ")
                 }
 
@@ -106,5 +118,4 @@ abstract class DartClassGenerator(private val classOptions: ClassOptions, privat
         }
         return sb.toString();
     }
-
 }

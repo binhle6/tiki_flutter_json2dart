@@ -11,10 +11,7 @@ import com.intellij.psi.PsiManager
 import com.github.binhle6.tikiflutterjson2dart.*
 import com.github.binhle6.tikiflutterjson2dart.repos.StorageRepo
 import com.github.binhle6.tikiflutterjson2dart.ui.JsonInputDialog
-import com.github.binhle6.tikiflutterjson2dart.utils.JSerializerGenerator
-import com.github.binhle6.tikiflutterjson2dart.utils.JsonSerializerGenerator
-import com.github.binhle6.tikiflutterjson2dart.utils.pascalCaseToSnakeCase
-import com.github.binhle6.tikiflutterjson2dart.utils.toLowerCaseFirstOne
+import com.github.binhle6.tikiflutterjson2dart.utils.*
 
 class Json2DartAction : AnAction() {
 
@@ -55,11 +52,15 @@ class Json2DartAction : AnAction() {
             val dartClassDefinition = map2CustomClassDefinition(fileName, map, classOptions, suffix)
 
             val generator = DartFileGenerator(project, directory, fileName)
-            val classGenerator = if (classOptions.annotationOption == AnnotationOption.JsonSerializer)
-                JsonSerializerGenerator(classOptions, fileName) else JSerializerGenerator(classOptions, fileName)
+//            val classGenerator = if (classOptions.annotationOption == AnnotationOption.JsonSerializer)
+//                JsonSerializerGenerator(classOptions, fileName) else JSerializerGenerator(classOptions, fileName)
+            val classGenerator = when (classOptions.annotationOption) {
+                AnnotationOption.None -> DartClassGenerator(classOptions, fileName)
+                AnnotationOption.JsonSerializer -> JsonSerializerGenerator(classOptions, fileName)
+                AnnotationOption.JSerializer -> JSerializerGenerator(classOptions, fileName)
+            }
             val codeContent = classGenerator.generateCode(dartClassDefinition)
             generator.generateDarFile(codeContent)
-
         }.show()
     }
 
