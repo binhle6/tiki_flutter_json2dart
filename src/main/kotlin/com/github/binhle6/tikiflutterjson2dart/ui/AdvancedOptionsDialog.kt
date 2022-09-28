@@ -7,7 +7,6 @@ import com.intellij.ui.TabbedPaneImpl
 import com.intellij.util.ui.JBEmptyBorder
 import com.github.binhle6.tikiflutterjson2dart.AnnotationOption
 import java.awt.BorderLayout
-import java.awt.Checkbox
 import javax.swing.*
 
 /**
@@ -50,7 +49,7 @@ open class AdvancedOptionsDialog(
     override fun createCenterPanel(): JComponent? {
         val messagePanel = JPanel(BorderLayout())
         messagePanel.preferredSize
-        val taps = TabbedPaneImpl(SwingConstants.TOP);
+        val tabs = TabbedPaneImpl(SwingConstants.TOP);
 
         finalCheckBox = createCheckbox("Final");
         nullableCheckBox = createCheckbox("Nullable");
@@ -62,15 +61,14 @@ open class AdvancedOptionsDialog(
         jSerializerRadioButton = createRadioButton("JSerializer");
         jsonSerializerRadioButton = createRadioButton("JsonSerializer");
         radioGroup = ButtonGroup();
-
         radioGroup.add(jsonSerializerRadioButton);
         radioGroup.add(jSerializerRadioButton)
 
-        val propertyContainer = createPanel();
+        val propertyPanel = createPanel();
 
-        propertyContainer.add(finalCheckBox)
-        propertyContainer.add(nullableCheckBox)
-        propertyContainer.add(ignoreUnannotatedCheckBox)
+        propertyPanel.add(finalCheckBox)
+        propertyPanel.add(nullableCheckBox)
+        propertyPanel.add(ignoreUnannotatedCheckBox)
 
         val generatePanel = createPanel()
 
@@ -84,15 +82,13 @@ open class AdvancedOptionsDialog(
         annotationPanel.add(jsonSerializerRadioButton);
         annotationPanel.add(jSerializerRadioButton);
 
+        tabs.border = JBEmptyBorder(16, 16, 5, 16)
+        tabs.addTab("Property", propertyPanel)
+        //tabs.addTab("Generate", generatePanel)
+        tabs.addTab("Options", optionsPanel)
+        tabs.addTab("Annotation", annotationPanel)
 
-        taps.border = JBEmptyBorder(16, 16, 5, 16)
-        taps.addTab("Property", propertyContainer)
-
-        taps.addTab("Options", optionsPanel)
-
-        taps.addTab("Annotation", annotationPanel)
-
-        messagePanel.add(taps, BorderLayout.SOUTH)
+        messagePanel.add(tabs, BorderLayout.NORTH)
         setViewValues()
         return messagePanel
     }
@@ -134,6 +130,5 @@ open class AdvancedOptionsDialog(
             )
         )
         super.doOKAction()
-
     }
 }

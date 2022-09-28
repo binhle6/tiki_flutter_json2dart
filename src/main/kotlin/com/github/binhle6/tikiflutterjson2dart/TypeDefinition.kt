@@ -19,7 +19,7 @@ class CustomClassType(
 /**
  * dart language internal class type
  * like int,double,String,bool
- * don't need generate class code
+ * don't need to generate class code
  */
 class InternalClassType(
     name: String, fieldType: String
