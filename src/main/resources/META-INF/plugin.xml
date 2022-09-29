@@ -34,11 +34,18 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="TikiJson2DartAction"
+        <action id="com.github.binhle6.tikiflutterjson2dart.action.Json2DartAction"
                 class="com.github.binhle6.tikiflutterjson2dart.action.Json2DartAction"
                 text="Dart File From JSON"
                 icon="/icons/json2dart.png"
                 description="Generate dart object files from JSON model">
+            <add-to-group anchor="before" relative-to-action="NewFile" group-id="NewGroup"/>
+        </action>
+        <action id="com.github.binhle6.tikiflutterjson2dart.action.CleanArchTemplateAction"
+                class="com.github.binhle6.tikiflutterjson2dart.action.CleanArchTemplateAction"
+                text="Clean Architecture Template"
+                icon="/icons/json2dart.png"
+                description="Generate clean architecture folder template">
             <add-to-group anchor="before" relative-to-action="NewFile" group-id="NewGroup"/>
         </action>
     </actions>
