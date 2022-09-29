@@ -7,8 +7,7 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JTextField
 
-class FeatureInfoDialog(project: Project?) :
-    DialogWrapper(project) {
+class FeatureInfoDialog(project: Project?) : DialogWrapper(project) {
     private var contentPanel: JPanel? = null
     private var featureNameTextField: JTextField? = null
     private var splitDataSourceCheckBox: JCheckBox? = null
