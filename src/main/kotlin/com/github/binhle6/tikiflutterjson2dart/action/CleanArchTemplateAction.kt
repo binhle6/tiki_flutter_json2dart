@@ -1,35 +1,17 @@
 package com.github.binhle6.tikiflutterjson2dart.action
 
+import com.github.binhle6.tikiflutterjson2dart.ui.FeatureInfoDialog
 import com.github.binhle6.tikiflutterjson2dart.utils.DirectoryGenerator
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiDirectory
-import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiManager
 
 class CleanArchTemplateAction : AnAction() {
 
     override fun actionPerformed(event: AnActionEvent) {
-        val project = event.project ?: return
-        val dataContext = event.dataContext
-        val module = LangDataKeys.MODULE.getData(dataContext) ?: return
-        //Get the folder selected by the right mouse button
-        val directory = when (val navigationTable = LangDataKeys.NAVIGATABLE.getData(dataContext)) {
-            is PsiDirectory -> navigationTable
-            is PsiFile -> navigationTable.containingDirectory
-            else -> {
-                val root = ModuleRootManager.getInstance(module)
-                root.sourceRoots
-                    .asSequence()
-                    .mapNotNull {
-                        PsiManager.getInstance(project).findDirectory(it)
-                    }.firstOrNull()
-            }
-        } ?: return
-
-        generateTemplate(event.dataContext, "test", false)
+        val dialog = FeatureInfoDialog(event.project)
+        if (dialog.showAndGet())
+            generateTemplate(event.dataContext, dialog.getName(), dialog.splitSource())
     }
 
     /**
